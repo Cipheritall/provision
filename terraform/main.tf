@@ -1,4 +1,4 @@
-resource "proxmox_lxc" "vmtest" {
+resource "proxmox_lxc" "lelxlc" {
     target_node = "sun"
     hostname = "observabilitao"
     ostemplate = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
