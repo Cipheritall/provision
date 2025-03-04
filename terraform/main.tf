@@ -23,7 +23,6 @@ resource "proxmox_vm_qemu" "openHands" {
     size     = "10G"
     type     = "scsi"
     storage  = "hdd4to"
-    media_type = "cdrom"  # Mount a CD-ROM image
     file    = "iso/debian-live-12.9.0-amd64-kde.iso"
   }
 
