@@ -43,11 +43,19 @@ resource "proxmox_lxc" "lelxlc" {
     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2OAn/CdbuFZGfhZXJzG9dJ3UVDBfL4iCWWW/Ky2ezmoG4bh62aLQfcLOC3D3ea5jad6ph43g09PK7//G+TkSYcHDUM0LbyCCK/gjXrpl3YRJHNLp043hy9q7ZwLOJf7iBHAKol91Z1by7B92inGJRsmhIQOlLYNBrePMGbHGdBxYsI/1akJU7vUrR6OFHsxEEL+f/JhUsrynsruz8sOKkFtk+HVkXsODSz7Y2PagwX0AQndKsbA72yJfgxddhB3Vb6W8NEpIx+ZBOG/i3hnalQNBbPMeGTDZ3PpOtmJXIReX4WlAi9sWcKbDMVpz1P3Y2nmAHEhLzmExGIoiq9bj0U9k5qwN5WSympObXzLLsQEWJvCrBiAMNzGi7GxWAUNZ+EruVCCDuay/4q4A62MtHSWv8LyKJOBdKyRJt5D/3T1nHHmAZybZSmbgKnzjdD0yktfCZmZELvN7mqXGxmYyI386MXzmFeB6ly1YmZYW+pN0HGpiWuRNMDLgUL+/rylk= rick@ubuntu-24
     EOT
 
+
     // Basic container settings
     unprivileged = true
     start = true
     onboot = true
 }
+
+output "container_credentials" {
+    description = "Default login credentials"
+    value = {
+        root_password = "00221"
+    }
+}    
 
 output "container_credentials" {
     description = "Default login credentials"
