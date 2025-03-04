@@ -19,9 +19,12 @@ resource "proxmox_vm_qemu" "openHands" {
   bootdisk = "virtio0"
   boot     = "order=ide2;virtio0"  # Ensure the VM boots from the ISO first
 
-  cdrom {
-    storage = "hhd4to"
-    file    = "debian-live-12.9.0-amd64-kde.iso"
+  disk {
+    size     = "10G"
+    type     = "scsi"
+    storage  = "hdd4to"
+    media_type = "cdrom"  # Mount a CD-ROM image
+    file    = "iso/debian-live-12.9.0-amd64-kde.iso"
   }
 
   sshkeys = <<EOT
