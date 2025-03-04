@@ -72,7 +72,10 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        cli_config_credentials_token: ${{ secrets.TF_VAR_PROXMOX_API_TOKEN_SECRET }} 
+        cli_config_credentials_hostname: ${{ env.TF_VAR_PROXMOX_API_URL }} 
+        cli_config_credentials_id: ${{ env.TF_VAR_PROXMOX_API_ID }}
+
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
