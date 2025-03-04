@@ -1,5 +1,5 @@
 resource "proxmox_vm_qemu" "openHands" {
-  name        = "debian-vm"
+  name        = "openHands-vm-${formatdate("YYYYMMDDhhmm", timestamp())}"
   target_node = "pve"
   vmid        = 200
   memory      = 4096
