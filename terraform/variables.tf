@@ -1,10 +1,13 @@
+
+variable "proxmox_api_url" {
+    type = string
+}
 variable "proxmox_api_id" {
-  description = "Proxmox API Token ID"
-  type        = string
+    type = string
 }
 
 variable "proxmox_api_token_secret" {
-  description = "Proxmox API Token Secret"
-  type        = string
-  sensitive   = true
+    type = string
+    sensitive = true
+    description = "Proxmox API token secret"
 }
