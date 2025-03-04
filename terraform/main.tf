@@ -1,35 +1,54 @@
-resource "proxmox_vm_qemu" "openHands" {
-  name        = "openHands-vm-${formatdate("YYYYMMDDhhmm", timestamp())}"
-  target_node = "sun"
-  memory      = 4096
-  cores       = 2
-  cpu         = "host"
+resource "proxmox_lxc" "ubuntu_container" {
+    target_node = "sun"
+    hostname = "observabilitao"
+    ostemplate = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
+    password = "002210"
+    vmid = "1010000"
+    
+    // Resource limits
+    memory = 2048
+    swap = 2024
+    cores = 4
+    
+    // Root disk
+    rootfs {
+        storage = "local-lvm"
+        size = "10G"
+    }
+    // Additional storage
+    mountpoint {
+        key = "data"
+        slot = 0
+        mp = "/mnt/data"
+        size = "50G"
+        storage = "hhd4to"
+    }
 
-  disk {
-    size       = "40G"
-    type       = "virtio"
-    storage    = "local-lvm"
-  }
+    mountpoint {
+        key = "logs"
+        slot = 1
+        mp = "/mnt/logs"
+        size = "10G"
+        storage = "hhd4to"
+    }
+    // Network configuration
+    network {
+        name = "eth0"
+        bridge = "vmbr0"
+        ip = "dhcp"
+    }
 
-  network {
-    model      = "virtio"
-    bridge     = "vmbr0"
-  }
+    // add ssh keys
+    ssh_public_keys = <<-EOT
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC2OAn/CdbuFZGfhZXJzG9dJ3UVDBfL4iCWWW/Ky2ezmoG4bh62aLQfcLOC3D3ea5jad6ph43g09PK7//G+TkSYcHDUM0LbyCCK/gjXrpl3YRJHNLp043hy9q7ZwLOJf7iBHAKol91Z1by7B92inGJRsmhIQOlLYNBrePMGbHGdBxYsI/1akJU7vUrR6OFHsxEEL+f/JhUsrynsruz8sOKkFtk+HVkXsODSz7Y2PagwX0AQndKsbA72yJfgxddhB3Vb6W8NEpIx+ZBOG/i3hnalQNBbPMeGTDZ3PpOtmJXIReX4WlAi9sWcKbDMVpz1P3Y2nmAHEhLzmExGIoiq9bj0U9k5qwN5WSympObXzLLsQEWJvCrBiAMNzGi7GxWAUNZ+EruVCCDuay/4q4A62MtHSWv8LyKJOBdKyRJt5D/3T1nHHmAZybZSmbgKnzjdD0yktfCZmZELvN7mqXGxmYyI386MXzmFeB6ly1YmZYW+pN0HGpiWuRNMDLgUL+/rylk= rick@ubuntu-24
+    EOT
 
-  bootdisk = "virtio0"
-  boot     = "order=ide2;virtio0"  # Ensure the VM boots from the ISO first
-
-  disk {
-    size     = "10G"
-    type     = "scsi"
-    storage  = "hdd4to"
-    file    = "iso/debian-live-12.9.0-amd64-kde.iso"
-  }
-
-  sshkeys = <<EOT
-  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDToWVX12P1WF5vGWdXAWtZ9GPXVoNZMo1jQylMnS3XSStpUwz2HVVPni2klvJP/6+1KJ538TqBLTT4s06IvL+Yjgr0uJIIYx7CAmgEKDl9o3dxIIVywqgg82+ejng3kXl9vSgi7Blk3LJp2rttqNE/xTeomi2ilqppub4t20AiZfk/A21+iqo7FuQov2OgWj9u3x9xVxtkQ9S5AMO51HlsLoGmWeXcKlPViVSB47FMzJl/WUUvyfOTPfMUA3LngZB8XkcI/U+TPb0U9OXcatU1TPGLxWc1vFKb+GngSV2PZ+IoZ4Tn3nv5cQM1Xov+TpB2z7lCrEvD+I8TX9yhe3lPeEOCG/gmO572cTjXeiSIvWdJFX2bYEmTIiVOcu4IbzQAcQR8NmEzYV4oUNYbrY8nmqAOjV8Wa3hnfg/ZhjskL1vp5InmiPEARXrNlkhUvCqkzPI8fNkvJ3fj1qzkx6gxFQEGJzhsW38yPcxHFVYukG2rdKiICsLxPEHrUw76Oa8= run@GitRunners
-EOT
+    // Basic container settings
+    unprivileged = true
+    start = true
+    onboot = true
 }
+
 output "container_credentials" {
     description = "Default login credentials"
     value = {
