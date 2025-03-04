@@ -1,4 +1,3 @@
-
 resource "proxmox_vm_qemu" "openHands" {
   name        = "debian-vm"
   target_node = "pve"
