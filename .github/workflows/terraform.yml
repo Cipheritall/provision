@@ -68,17 +68,28 @@ jobs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_VAR_PROXMOX_API_TOKEN_SECRET }}
-        cli_config_credentials_hostname: ${{ env.TF_VAR_PROXMOX_API_URL }}
-        cli_config_credentials_id: ${{ env.TF_VAR_PROXMOX_API_ID }}
 
     - name: Terraform Init
       run: terraform init
+      env:
+        TF_VAR_proxmox_api_url: ${{ secrets.TF_VAR_PROXMOX_API_URL }}
+        TF_VAR_proxmox_api_id: ${{ secrets.TF_VAR_PROXMOX_API_ID }}
+        TF_VAR_proxmox_api_token_secret: ${{ secrets.TF_VAR_PROXMOX_API_TOKEN_SECRET }}
+
+    - name: Terraform Format
+      run: terraform fmt -check
 
     - name: Terraform Plan
       run: terraform plan -input=false
+      env:
+        TF_VAR_proxmox_api_url: ${{ secrets.TF_VAR_PROXMOX_API_URL }}
+        TF_VAR_proxmox_api_id: ${{ secrets.TF_VAR_PROXMOX_API_ID }}
+        TF_VAR_proxmox_api_token_secret: ${{ secrets.TF_VAR_PROXMOX_API_TOKEN_SECRET }}
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
+      env:
+        TF_VAR_proxmox_api_url: ${{ secrets.TF_VAR_PROXMOX_API_URL }}
+        TF_VAR_proxmox_api_id: ${{ secrets.TF_VAR_PROXMOX_API_ID }}
+        TF_VAR_proxmox_api_token_secret: ${{ secrets.TF_VAR_PROXMOX_API_TOKEN_SECRET }}
