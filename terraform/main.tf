@@ -3,7 +3,7 @@ resource "proxmox_lxc" "lelxlc" {
     hostname = "observabilitao"
     ostemplate = "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
     password = "002210"
-    vmid = "1010000"
+    vmid = "1010070"
     
     // Resource limits
     memory = 2048
@@ -57,9 +57,3 @@ output "container_credentials" {
     }
 }    
 
-output "container_credentials" {
-    description = "Default login credentials"
-    value = {
-        root_password = "00221"
-    }
-}
